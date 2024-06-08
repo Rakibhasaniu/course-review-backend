@@ -15,7 +15,19 @@ const createCourse = catchAsync(async (req, res) => {
       data: result,
     })
   })
+const getCourse = catchAsync(async (req, res) => {
+  
+    const result = await CourseServices.getAllCourseFromDB()
+  
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: 'course retrieve successfully',
+      data: result,
+    })
+  })
   export const CourseController = {
     createCourse,
+    getCourse
     
   }
