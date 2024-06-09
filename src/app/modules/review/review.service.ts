@@ -29,10 +29,10 @@ const giveReview = async (reviewData: TReview) => {
 
     // const result = await Review.findById(newReview[0]._id).select('-__v')
     // return result
-  } catch (err) {
+  } catch (err:any) {
     await session.abortTransaction()
     await session.endSession()
-    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to review course')
+    throw new Error(err)
   }
 }
 

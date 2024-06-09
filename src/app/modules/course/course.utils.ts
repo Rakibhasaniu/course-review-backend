@@ -14,3 +14,5 @@ export const durationCalculator = (start: string, end: string) => {
   
     return weeks
   }
+
+  export const CourseSearchAbleFields = ['title','language','tags.name']

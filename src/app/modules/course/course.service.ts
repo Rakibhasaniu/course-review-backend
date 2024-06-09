@@ -1,7 +1,7 @@
 import { TCategory } from "../category/category.interface";
 import { TCourse } from "./course.interface";
 import Course from "./course.model";
-import { durationCalculator } from "./course.utils";
+import { CourseSearchAbleFields, durationCalculator } from "./course.utils";
 
 const createCourseIntoDB = async(payload:TCourse) => {
     const duration = durationCalculator(payload.startDate,payload.endDate)
@@ -20,8 +20,19 @@ const createCourseIntoDB = async(payload:TCourse) => {
     // console.log(createCourse)
     // return createCourse;
 }
-const getAllCourseFromDB  = async() => {
-    const courses = await Course.find();
+const getAllCourseFromDB  = async(query:Record<string ,unknown>) => {
+    console.log(query)
+    let searchTerm ='';
+    if(query?.searchTerm){
+        searchTerm=query?.searchTerm as string;
+    }
+    const searchQuery = Course.find({
+        $or:CourseSearchAbleFields.map((field)=>({
+            [field]:{$regex:searchTerm, $options:'i'}
+    }))
+        
+    });
+    const courses = await Course.find()
     return courses;
 }
 
