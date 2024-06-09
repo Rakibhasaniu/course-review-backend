@@ -21,7 +21,8 @@ const createCourseIntoDB = async(payload:TCourse) => {
     // return createCourse;
 }
 const getAllCourseFromDB  = async(query:Record<string ,unknown>) => {
-    console.log(query)
+    // console.log(query)
+    const queryObj={...query}
     let searchTerm ='';
     if(query?.searchTerm){
         searchTerm=query?.searchTerm as string;
@@ -29,11 +30,23 @@ const getAllCourseFromDB  = async(query:Record<string ,unknown>) => {
     const searchQuery = Course.find({
         $or:CourseSearchAbleFields.map((field)=>({
             [field]:{$regex:searchTerm, $options:'i'}
-    }))
-        
+    }))    
     });
-    const courses = await Course.find()
-    return courses;
+    const excludeFields =['searchTerm','sort','limit']
+    excludeFields.forEach((el)=>delete queryObj[el] )
+    const filterQuery =  searchQuery.find(queryObj)
+    let sort='-price';
+    if(query?.sort){
+        sort=query?.sort as string;
+    }
+    const sortQuery =  filterQuery.sort(sort)
+    let limit=5;
+    if(query?.limit){
+        limit=query?.limit as  number;
+    }
+
+    const limitQuery = await sortQuery.limit(limit);
+    return limitQuery ;
 }
 
 export const CourseServices = {
