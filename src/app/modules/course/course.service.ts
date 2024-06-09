@@ -68,7 +68,23 @@ const getAllCourseFromDB  = async(query:Record<string ,unknown>) => {
     return result;
 }
 
+const updateCourse = async(id:string,payload:Partial<TCourse>) => {
+    const {tags,...remainingData} = payload;
+    const updateBasicCourseInfo = await Course.findByIdAndUpdate(
+        id,
+        remainingData,
+        {
+            new:true,
+            runValidators:true
+        }
+
+    )
+    return updateBasicCourseInfo;
+}
+
 export const CourseServices = {
     createCourseIntoDB,
-    getAllCourseFromDB
+    getAllCourseFromDB,
+    updateCourse,
+
 }
