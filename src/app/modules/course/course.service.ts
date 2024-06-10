@@ -113,10 +113,13 @@ const getCourseByIdFromDB = async(id:string) => {
     'details._id': 0,
     __v: 0,
     })
-    console.log(course?.id)
-    const review = await Review.findById(id);
-    console.log('course',course)
-    console.log('review',review)
+    
+    const review = await Review.find({id});
+    const result = {
+        course,
+        review
+    }
+    return result;
      
 }
 
