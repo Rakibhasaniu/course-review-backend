@@ -1,5 +1,6 @@
 import QueryBuilder from "../../builder/QueryBuilder";
 import { TCategory } from "../category/category.interface";
+import Review from "../review/review.schema";
 import { TCourse } from "./course.interface";
 import Course from "./course.model";
 import { CourseSearchAbleFields, durationCalculator, updateArray, updateObject } from "./course.utils";
@@ -103,9 +104,28 @@ const updateCourse = async(id:string,payload:Partial<TCourse>) => {
     // return updateBasicCourseInfo;
 }
 
+const getCourseByIdFromDB = async(id:string) => {
+    const course = await Course.findById(id,{
+        averageRating: 0,
+    totalRating: 0,
+    reviewCount: 0,
+    'tags._id': 0,
+    'details._id': 0,
+    __v: 0,
+    })
+    console.log(course?.id)
+    const review = await Review.findById(id);
+    console.log('course',course)
+    console.log('review',review)
+     
+}
+
+
+
 export const CourseServices = {
     createCourseIntoDB,
     getAllCourseFromDB,
     updateCourse,
+    getCourseByIdFromDB
 
 }
