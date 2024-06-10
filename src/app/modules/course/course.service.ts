@@ -122,6 +122,16 @@ const getCourseByIdFromDB = async(id:string) => {
     return result;
      
 }
+const getBestCourseFromDB = async() => {
+    const bestCourse = await Course.find({}).sort({averageRating:-1}).limit(1).select('-__v');
+    console.log(bestCourse)
+    const result = {
+        course:bestCourse,
+        averageRating:bestCourse[0]?.averageRating,
+        reviewCount:bestCourse[0]?.reviewCount
+    }
+    return result;
+}
 
 
 
@@ -129,6 +139,7 @@ export const CourseServices = {
     createCourseIntoDB,
     getAllCourseFromDB,
     updateCourse,
-    getCourseByIdFromDB
+    getCourseByIdFromDB,
+    getBestCourseFromDB
 
 }

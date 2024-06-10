@@ -10,3 +10,9 @@ router.patch('/:id',CourseController.updateCourse)
 router.get('/:id',CourseController.getSingleCourse)
 
 export const CourseRoutes = router;
+
+const router2= Router();
+router2.get('/',CourseController.getBestCourse)
+
+
+export const BestRoutes = router2;
