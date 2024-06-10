@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import { TReview } from './review.interface'
 
 const ReviewSchema = new Schema<TReview>({
-    courseId: {
+  id: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'course',
