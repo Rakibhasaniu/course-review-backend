@@ -2,7 +2,7 @@ import QueryBuilder from "../../builder/QueryBuilder";
 import { TCategory } from "../category/category.interface";
 import { TCourse } from "./course.interface";
 import Course from "./course.model";
-import { CourseSearchAbleFields, durationCalculator } from "./course.utils";
+import { CourseSearchAbleFields, durationCalculator, updateArray, updateObject } from "./course.utils";
 
 const createCourseIntoDB = async(payload:TCourse) => {
     const duration = durationCalculator(payload.startDate,payload.endDate)
@@ -69,8 +69,9 @@ const getAllCourseFromDB  = async(query:Record<string ,unknown>) => {
 }
 
 const updateCourse = async(id:string,payload:Partial<TCourse>) => {
-    const {tags,...remainingData} = payload;
-    const updateBasicCourseInfo = await Course.findByIdAndUpdate(
+    const {details,tags,...remainingData} = payload;
+    // console.log(tags)
+    await Course.findByIdAndUpdate(
         id,
         remainingData,
         {
@@ -79,7 +80,27 @@ const updateCourse = async(id:string,payload:Partial<TCourse>) => {
         }
 
     )
-    return updateBasicCourseInfo;
+    if(details){
+        const modifiedData = updateObject(details);
+        // console.log(modifiedData)
+        await Course.findByIdAndUpdate(id,modifiedData,{new:true})
+    }
+    if(tags && tags.length > 0){
+        const modifiedTags:any =await updateArray(id,tags);
+        // console.log(modifiedTags)
+        await Course.findByIdAndUpdate(id,{tags:modifiedTags},{new:true})
+    }
+ 
+    const finalUpdatedData = await Course.findById(id, {
+        averageRating: 0,
+        totalRating: 0,
+        reviewCount: 0,
+        'tags._id': 0,
+        'details._id': 0,
+        __v: 0,
+      })
+      return finalUpdatedData
+    // return updateBasicCourseInfo;
 }
 
 export const CourseServices = {

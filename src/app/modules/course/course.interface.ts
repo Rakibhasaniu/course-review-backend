@@ -1,7 +1,7 @@
 import { Types } from 'mongoose'
 
 export type TTag = {
-//   filter(): unknown
+  filter(): unknown
   name: string
   isDeleted: boolean
 }
