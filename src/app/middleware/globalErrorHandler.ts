@@ -4,8 +4,10 @@ import { AppError } from '../errors/AppError'
 import { TErrorSources } from '../interface/error'
 import { ZodError } from 'zod'
 import { config } from '../config'
-import handleZodError from '../errors/zodErrorHandler'
 import mongooseErrorHandler from '../errors/MongooseErrorHandler'
+import handleZodError from '../errors/ZodErrorHandler'
+import CastErrorHandler from '../errors/CastErrorHandler'
+import handleDuplicateError from '../errors/DuplicateErrorHandler'
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
@@ -32,26 +34,32 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     message=simplifiedError?.message;
     errorSources=simplifiedError?.errorSources
   }
-  // else if (err?.name === 'CastError') {
-  //   statusCode = 400
-  //   message = 'Invalid ID!'
-  //   errorMessage = CastErrorMessageGenerator(err)
-  // } else if (err?.code === 11000) {
-  //   statusCode = 400
-  //   message = 'Duplicate Entry!'
-  //   errorMessage = DuplicateErrorMessageGenerator(err)
-  // } else if (err instanceof AppError) {
-  //   statusCode = err.statusCode
-  //   message = 'BAD REQUEST!'
-  //   errorMessage = err.message
-  // } else if (err instanceof Error) {
-  //   message = 'Something Went Wrong!'
-  //   errorMessage = err.message
-  // }
+  else if (err?.name === 'CastError') {
+    const simplifiedError= CastErrorHandler(err)
+    statusCode=simplifiedError?.statusCode;
+    message=simplifiedError?.message;
+    errorSources=simplifiedError?.errorSources
+  } 
+  else if (err?.code === 11000) {
+    const simplifiedError= handleDuplicateError(err)
+    statusCode=simplifiedError?.statusCode;
+    message=simplifiedError?.message;
+    errorSources=simplifiedError?.errorSources
+    
+  }
+  else if (err instanceof AppError) {
+    statusCode = err.statusCode
+    message = 'BAD REQUEST!'
+    errorMessage = err.message
+  } 
+  else if (err instanceof Error) {
+    message = 'Something Went Wrong!'
+    errorMessage = err.message
+  }
 
   return res.status(statusCode).json({
     success: false,
-    message:err?.message,
+    message,
     errorSources,
     stack:config.node_env ==='development' ?  err?.stack : null
   })
