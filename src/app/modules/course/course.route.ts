@@ -1,11 +1,13 @@
 import { Router } from "express";
 import { CourseController } from "./course.controller";
+import auth from "../../middleware/auth";
+import { USER_ROLE } from "../user/user.constant";
 
 
 const router = Router();
 
 router.post('/create-course',CourseController.createCourse)
-router.get('/',CourseController.getCourse)
+router.get('/',auth(USER_ROLE.user),CourseController.getCourse)
 router.patch('/:id',CourseController.updateCourse)
 router.get('/:id',CourseController.getSingleCourse)
 

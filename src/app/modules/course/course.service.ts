@@ -23,6 +23,7 @@ const createCourseIntoDB = async(payload:TCourse) => {
     // return createCourse;
 }
 const getAllCourseFromDB  = async(query:Record<string ,unknown>) => {
+    // console.log(req.user)
     // console.log(query)
     // const queryObj={...query}
     // let searchTerm ='';

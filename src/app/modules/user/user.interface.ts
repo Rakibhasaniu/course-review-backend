@@ -1,6 +1,7 @@
 import { Model } from "mongoose";
 
 export interface TUser  {
+    _id: any;
     username: string
     email: string
     passwordChangedAt?: Date;
