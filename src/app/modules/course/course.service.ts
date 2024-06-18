@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { TCategory } from "../category/category.interface";
 import Review from "../review/review.schema";
@@ -5,11 +6,14 @@ import { TCourse } from "./course.interface";
 import Course from "./course.model";
 import { CourseSearchAbleFields, durationCalculator, updateArray, updateObject } from "./course.utils";
 
-const createCourseIntoDB = async(payload:TCourse) => {
+const createCourseIntoDB = async(payload:TCourse,id:string) => {
     const duration = durationCalculator(payload.startDate,payload.endDate)
     // console.log(duration)
     payload.durationInWeeks=duration;
+    payload.createdBy= new mongoose.Types.ObjectId(id);
+    // console.log(payload)
     const createCourse = await Course.create(payload);
+    // console.log(createCourse)
     const result = await Course.findById(createCourse._id, {
         averageRating: 0,
         totalRating: 0,
@@ -19,7 +23,7 @@ const createCourseIntoDB = async(payload:TCourse) => {
         __v: 0,
       })
       return result
-    // console.log(createCourse)
+    
     // return createCourse;
 }
 const getAllCourseFromDB  = async(query:Record<string ,unknown>) => {

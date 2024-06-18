@@ -6,8 +6,8 @@ import { USER_ROLE } from "../user/user.constant";
 
 const router = Router();
 
-router.post('/create-course',CourseController.createCourse)
-router.get('/',auth(USER_ROLE.user),CourseController.getCourse)
+router.post('/create-course',auth(USER_ROLE.admin),CourseController.createCourse)
+router.get('/',CourseController.getCourse)
 router.patch('/:id',CourseController.updateCourse)
 router.get('/:id',CourseController.getSingleCourse)
 

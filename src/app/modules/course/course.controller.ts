@@ -5,8 +5,11 @@ import { CourseServices } from "./course.service"
 
 const createCourse = catchAsync(async (req, res) => {
     const courseData = req.body
-  
-    const result = await CourseServices.createCourseIntoDB(courseData)
+    // console.log(req.user)
+
+    const id = req.user.userId;
+    // console.log(id)
+    const result = await CourseServices.createCourseIntoDB(courseData,id)
   
     sendResponse(res, {
       statusCode: 201,

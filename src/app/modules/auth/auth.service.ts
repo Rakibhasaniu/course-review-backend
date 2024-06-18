@@ -9,8 +9,10 @@ const createUser = async(payload:any) => {
     return user;
 }
 const loginUser = async(payload:any) => {
-    const {name,password}=payload;
-   const user = await User.isUserExists(name);
+    const {username,password}=payload;
+    // console.log(username,password)
+   const user = await User.isUserExists(username);
+//    console.log(user)
 
 if(!user){
     throw new AppError(httpStatus.NOT_FOUND,'This User Is Not Found');

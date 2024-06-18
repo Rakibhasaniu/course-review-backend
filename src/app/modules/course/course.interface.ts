@@ -12,6 +12,7 @@ export type TDetails = {
 }
 
 export type TCourse = {
+  
   title: string
   instructor: string
   categoryId: Types.ObjectId
@@ -24,6 +25,7 @@ export type TCourse = {
   durationInWeeks: number
   details: TDetails
   totalRating: number
+  createdBy: Types.ObjectId;
   averageRating: number
   reviewCount: number
 }

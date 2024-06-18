@@ -25,6 +25,11 @@ const CourseSchema = new Schema<TCourse>({
   language: { type: String, required: true },
   provider: { type: String, required: true },
   durationInWeeks: { type: Number, required: true },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+  },
   details: DetailsSchema,
   totalRating: { type: Number, default: 0 },
   averageRating: { type: Number, default: 0 },
